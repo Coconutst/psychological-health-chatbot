@@ -1,0 +1,27 @@
+{
+  "name": "psychological-health-chatbot-frontend",
+  "version": "1.0.0",
+  "description": "心理健康聊天机器人前端",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/vue-fontawesome": "^3.0.3",
+    "axios": "^1.5.0",
+    "js-cookie": "^3.0.5",
+    "markdown-it": "^14.1.0",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.29",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.9"
+  }
+}

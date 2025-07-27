@@ -1,0 +1,1371 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "11心理健康聊天机器人 API",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Health Check"
+    },
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Multi-Agent Psychology Chat"
+    },
+    {
+      "name": "Conversations"
+    },
+    {
+      "name": "User Profile"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Read Root",
+        "deprecated": false,
+        "description": "",
+        "operationId": "read_root__get",
+        "tags": [
+          "Health Check"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register",
+        "deprecated": false,
+        "description": "用户注册",
+        "operationId": "register_api_auth_register_post",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login",
+        "deprecated": false,
+        "description": "用户登录",
+        "operationId": "login_api_auth_login_post",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "user@example.com",
+                "password": "new123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                },
+                "example": {
+                  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZmUxZjFhZS1lNWI4LTRmMGQtODJlZi00ODY5YTIzNmQ1ZGIiLCJleHAiOjE3NTM1Njk1MzZ9.0t33sTz34YGmfdkHplqIhBNNLPeZ7EXVkVLwsyYNe9A",
+                  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZmUxZjFhZS1lNWI4LTRmMGQtODJlZi00ODY5YTIzNmQ1ZGIiLCJleHAiOjE3NTQxNzI1MzZ9.xfit8wAW_nohfQdzQ8DKw-ORZqraJ_7bpVls6rttf_U",
+                  "token_type": "bearer",
+                  "user_id": "6fe1f1ae-e5b8-4f0d-82ef-4869a236d5db",
+                  "email": "user@example.com",
+                  "username": "张三"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/change-password": {
+      "post": {
+        "summary": "修改密码",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "current_password": "new123456",
+                "new_password": "password123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "summary": "Refresh Token",
+        "deprecated": false,
+        "description": "刷新访问令牌",
+        "operationId": "refresh_token_api_auth_refresh_post",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "refresh_token",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZmUxZjFhZS1lNWI4LTRmMGQtODJlZi00ODY5YTIzNmQ1ZGIiLCJleHAiOjE3NTQxNTAyOTB9.gtUd_J0819r-dvUR7_yirD83HKBRlI5MYRto3rNaifY",
+            "schema": {
+              "type": "string",
+              "title": "Refresh Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/validate": {
+      "post": {
+        "summary": "Validate Token",
+        "deprecated": false,
+        "description": "验证令牌",
+        "operationId": "validate_token_api_auth_validate_post",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "deprecated": false,
+        "description": "用户登出",
+        "operationId": "logout_api_auth_logout_post",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Get Current User Info",
+        "deprecated": false,
+        "description": "获取当前用户信息",
+        "operationId": "get_current_user_info_api_auth_me_get",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfo"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/chat": {
+      "post": {
+        "summary": "流式请求-新对话不需要conversion_id",
+        "deprecated": false,
+        "description": "多智能体心理咨询聊天接口（流式响应）",
+        "operationId": "multi_agent_chat_api_multi_agent_chat_post",
+        "tags": [
+          "Multi-Agent Psychology Chat"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiAgentChatRequest"
+              },
+              "example": {
+                "model": "deepseek-chat",
+                "message": "Hello!",
+                "stream": true,
+                "conversation_id": "test_conversation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/conversations/": {
+      "get": {
+        "summary": "Get Conversations",
+        "deprecated": false,
+        "description": "获取当前用户的会话列表",
+        "operationId": "get_conversations_api_conversations__get",
+        "tags": [
+          "Conversations"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ConversationInfo"
+                  },
+                  "type": "array",
+                  "title": "Response Get Conversations Api Conversations  Get"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/conversations/conversation_id": {
+      "delete": {
+        "summary": "Delete Conversation",
+        "deprecated": false,
+        "description": "删除指定会话",
+        "operationId": "delete_conversation_api_conversations__conversation_id__delete",
+        "tags": [
+          "Conversations"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update Conversation Title",
+        "deprecated": false,
+        "description": "更新会话标题",
+        "operationId": "update_conversation_title_api_conversations__conversation_id__patch",
+        "tags": [
+          "Conversations"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTitleRequest"
+              },
+              "example": {
+                "title": "嗯嗯拣慢减去扭缺乏平坦由于"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/conversations/{conversation_id}/messages": {
+      "get": {
+        "summary": "Get Conversation Messages",
+        "deprecated": false,
+        "description": "根据会话conversation_id获取消息列表",
+        "operationId": "get_conversation_messages_api_conversations__conversation_id__messages_get",
+        "tags": [
+          "Conversations"
+        ],
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "{{conversation_id}}",
+            "schema": {
+              "type": "string",
+              "title": "Conversation Id"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageInfo"
+                  },
+                  "title": "Response Get Conversation Messages Api Conversations  Conversation Id  Messages Get"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/conversations/messages/{message_id}/feedback": {
+      "patch": {
+        "summary": "Update Message Feedback",
+        "deprecated": false,
+        "description": "更新消息反馈",
+        "operationId": "update_message_feedback_api_conversations_messages__message_id__feedback_patch",
+        "tags": [
+          "Conversations"
+        ],
+        "parameters": [
+          {
+            "name": "message_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "466c4fe6-fe80-44e6-9a91-1f003b19ea31",
+            "schema": {
+              "type": "string",
+              "title": "Message Id"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackUpdateRequest"
+              },
+              "example": {
+                "feedback": 0
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {}
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/emotion-profile": {
+      "get": {
+        "summary": "Get User Emotion Profile",
+        "deprecated": false,
+        "description": "获取当前用户的情绪画像",
+        "operationId": "get_user_emotion_profile_api_user_emotion_profile_get",
+        "tags": [
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get User Emotion Profile Api User Emotion Profile Get",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/emotion-stats": {
+      "get": {
+        "summary": "Get User Emotion Stats",
+        "deprecated": false,
+        "description": "获取用户情绪统计信息",
+        "operationId": "get_user_emotion_stats_api_user_emotion_stats_get",
+        "tags": [
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer {{access_token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get User Emotion Stats Api User Emotion Stats Get",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserRegister": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "password123"
+          },
+          "username": {
+            "type": "string",
+            "example": "张三"
+          }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "password123"
+          }
+        }
+      },
+      "AuthResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token",
+          "user_id",
+          "email"
+        ],
+        "title": "AuthResponse"
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refresh_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserInfo"
+          }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "required": [
+          "refresh_token"
+        ],
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        }
+      },
+      "UserInfo": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "email",
+          "is_active",
+          "created_at"
+        ],
+        "title": "UserInfo"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MultiAgentChatRequest": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "用户消息"
+          },
+          "conversation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conversation Id",
+            "description": "会话ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "MultiAgentChatRequest",
+        "description": "多智能体聊天请求模型"
+      },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email",
+            "description": "用户邮箱"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "title": "Password",
+            "description": "用户密码"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "AgentStatusResponse": {
+        "properties": {
+          "supervisor_active": {
+            "type": "boolean",
+            "title": "Supervisor Active",
+            "description": "Supervisor智能体状态",
+            "default": true
+          },
+          "safety_active": {
+            "type": "boolean",
+            "title": "Safety Active",
+            "description": "Safety智能体状态",
+            "default": true
+          },
+          "retriever_active": {
+            "type": "boolean",
+            "title": "Retriever Active",
+            "description": "Retriever智能体状态",
+            "default": true
+          },
+          "reranker_active": {
+            "type": "boolean",
+            "title": "Reranker Active",
+            "description": "Reranker智能体状态",
+            "default": true
+          },
+          "answer_active": {
+            "type": "boolean",
+            "title": "Answer Active",
+            "description": "Answer智能体状态",
+            "default": true
+          },
+          "system_status": {
+            "type": "string",
+            "title": "System Status",
+            "description": "系统状态",
+            "default": "healthy"
+          }
+        },
+        "type": "object",
+        "title": "AgentStatusResponse",
+        "description": "智能体状态响应模型"
+      },
+      "MultiAgentTestRequest": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "我最近感到很焦虑，该怎么办？"
+          }
+        }
+      },
+      "MultiAgentTestResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string",
+            "example": "理解你的焦虑感受。建议：1. 深呼吸练习；2. 规律作息；3. 适量运动；4. 寻求社交支持；5. 专注当下。若持续困扰，可考虑咨询专业心理医生。"
+          },
+          "intent": {
+            "type": "string",
+            "example": "anxiety_management"
+          },
+          "emotion": {
+            "type": "string",
+            "example": "anxious"
+          },
+          "confidence": {
+            "type": "number",
+            "format": "float",
+            "example": 0.85
+          },
+          "crisis_level": {
+            "type": "string",
+            "example": "low"
+          },
+          "safety_triggered": {
+            "type": "boolean",
+            "example": false
+          },
+          "execution_time": {
+            "type": "number",
+            "format": "float",
+            "example": 2.5
+          }
+        }
+      },
+      "RegisterRequest": {
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username",
+            "description": "用户名"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email",
+            "description": "用户邮箱"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "title": "Password",
+            "description": "用户密码"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "RegisterRequest"
+      },
+      "ConversationInfo": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "conversation_id": {
+            "type": "string",
+            "title": "Conversation Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "message_count": {
+            "type": "integer",
+            "title": "Message Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "conversation_id",
+          "title",
+          "created_at",
+          "updated_at",
+          "message_count"
+        ],
+        "title": "ConversationInfo"
+      },
+      "UpdateTitleRequest": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "UpdateTitleRequest"
+      },
+      "MessageInfo": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "message_id": {
+            "type": "string",
+            "title": "Message Id"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "token_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token Count"
+          },
+          "model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Name"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
+          },
+          "feedback": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "message_id",
+          "role",
+          "content",
+          "created_at"
+        ],
+        "title": "MessageInfo"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "FeedbackUpdateRequest": {
+        "properties": {
+          "feedback": {
+            "type": "integer",
+            "maximum": 1,
+            "minimum": -1,
+            "title": "Feedback",
+            "description": "反馈值：-1(不好)，0(默认)，1(很好)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feedback"
+        ],
+        "title": "FeedbackUpdateRequest"
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "example": "错误详情信息"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [],
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
+}

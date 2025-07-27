@@ -1,0 +1,76 @@
+{
+  "summary": {
+    "total_tests": 11,
+    "passed_tests": 11,
+    "failed_tests": 0,
+    "success_rate": 100.0
+  },
+  "results": [
+    {
+      "test_name": "用户注册",
+      "success": true,
+      "timestamp": "2025-07-26T13:46:53.291591",
+      "details": "用户ID: c465984d-3815-4309-b450-25455cf42814, 邮箱: comprehensive_test_1753508811@example.com"
+    },
+    {
+      "test_name": "用户登录",
+      "success": true,
+      "timestamp": "2025-07-26T13:46:54.520606",
+      "details": "成功获取访问令牌"
+    },
+    {
+      "test_name": "令牌验证",
+      "success": true,
+      "timestamp": "2025-07-26T13:46:55.527007",
+      "details": "用户信息: 综合测试用户_1753508811, 活跃状态: True"
+    },
+    {
+      "test_name": "获取用户信息",
+      "success": true,
+      "timestamp": "2025-07-26T13:46:56.534528",
+      "details": "用户名: 综合测试用户_1753508811, 邮箱: comprehensive_test_1753508811@example.com"
+    },
+    {
+      "test_name": "创建对话",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:07.555371",
+      "details": "对话ID: 5ba52870-dbe7-4626-8129-9ee823bf3973, 响应长度: 287字符"
+    },
+    {
+      "test_name": "获取对话消息",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:10.595289",
+      "details": "获取到 2 条消息，其中 1 条助手消息"
+    },
+    {
+      "test_name": "消息正面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:11.615818",
+      "details": "消息ID: 64314954-a383-49f4-9a6c-05a072f2250e, 反馈值: 1"
+    },
+    {
+      "test_name": "消息负面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:12.626754",
+      "details": "消息ID: 64314954-a383-49f4-9a6c-05a072f2250e, 反馈值: -1"
+    },
+    {
+      "test_name": "继续对话",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:23.654452",
+      "details": "响应长度: 287字符"
+    },
+    {
+      "test_name": "令牌刷新",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:26.697969",
+      "details": "成功获取新的访问令牌"
+    },
+    {
+      "test_name": "用户登出",
+      "success": true,
+      "timestamp": "2025-07-26T13:47:27.702729",
+      "details": "消息: Successfully logged out"
+    }
+  ]
+}

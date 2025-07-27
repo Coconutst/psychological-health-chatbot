@@ -1,0 +1,76 @@
+{
+  "summary": {
+    "total_tests": 11,
+    "passed_tests": 8,
+    "failed_tests": 3,
+    "success_rate": 72.72727272727273
+  },
+  "results": [
+    {
+      "test_name": "用户注册",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:37.098406",
+      "details": "用户ID: bf7e2c47-a849-44b5-bd95-258c2d73a793, 邮箱: comprehensive_test_1753508494@example.com"
+    },
+    {
+      "test_name": "用户登录",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:38.518278",
+      "details": "成功获取访问令牌"
+    },
+    {
+      "test_name": "令牌验证",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:39.539202",
+      "details": "用户信息: 综合测试用户_1753508494, 活跃状态: True"
+    },
+    {
+      "test_name": "获取用户信息",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:40.554803",
+      "details": "用户名: 综合测试用户_1753508494, 邮箱: comprehensive_test_1753508494@example.com"
+    },
+    {
+      "test_name": "创建对话",
+      "success": false,
+      "timestamp": "2025-07-26T13:41:52.206903",
+      "details": "没有收到有效响应"
+    },
+    {
+      "test_name": "获取对话消息",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:55.250243",
+      "details": "获取到 2 条消息，其中 1 条助手消息"
+    },
+    {
+      "test_name": "消息正面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:56.272716",
+      "details": "消息ID: 597c9581-ebd5-4a62-93d9-fc67a814e50f, 反馈值: 1"
+    },
+    {
+      "test_name": "消息负面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:41:57.285347",
+      "details": "消息ID: 597c9581-ebd5-4a62-93d9-fc67a814e50f, 反馈值: -1"
+    },
+    {
+      "test_name": "继续对话",
+      "success": false,
+      "timestamp": "2025-07-26T13:42:08.337408",
+      "details": "没有收到有效响应"
+    },
+    {
+      "test_name": "令牌刷新",
+      "success": false,
+      "timestamp": "2025-07-26T13:42:11.377950",
+      "details": "状态码: 422, 响应: {\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"refresh_token\"],\"msg\":\"Field required\",\"input\":null}]}"
+    },
+    {
+      "test_name": "用户登出",
+      "success": true,
+      "timestamp": "2025-07-26T13:42:12.384436",
+      "details": "消息: Successfully logged out"
+    }
+  ]
+}

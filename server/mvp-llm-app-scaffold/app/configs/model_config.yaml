@@ -1,0 +1,32 @@
+# LLM和嵌入模型设置
+llm:
+  # 模型提供商（如openai、local等）
+  provider: openai
+  # 具体的模型名称
+  name: deepseek-chat
+  # 生成温度参数，控制输出的随机性（0-1之间，越高越随机）
+  temperature: 0.6
+  # 新增：最大令牌数参数，控制响应长度
+  max_tokens: 512  # 设置最大输出令牌数为512，以优化响应长度
+
+# 嵌入模型配置
+embedding:
+  # 嵌入模型提供商（local表示本地模型）
+  provider: local
+  # 嵌入模型名称（本地路径或HuggingFace模型名）
+  name: ./models/bge-small-zh
+
+# 向量数据库设置
+vector_store:
+  # 使用本地ChromaDB作为向量数据库
+  # 向量数据库持久化存储目录
+  persist_directory: chroma_db
+  # 向量数据库集合名称
+  collection_name: psychological_knowledge
+
+# 文本分割器设置
+text_splitter:
+  # 文本块大小（字符数）
+  chunk_size: 100
+  # 文本块重叠大小（字符数），用于保持上下文连贯性
+  chunk_overlap: 100

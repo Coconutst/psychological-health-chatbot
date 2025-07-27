@@ -1,0 +1,758 @@
+openapi: 3.0.0
+info:
+  title: 心理健康聊天机器人 API
+  description: 多智能体心理咨询聊天机器人的后端API接口文档
+  version: 1.0.0
+  contact:
+    name: 心理健康聊天机器人团队
+servers:
+  - url: http://localhost:8001
+    description: 本地开发服务器
+tags:
+  - name: 健康检查
+    description: API健康状态检查
+  - name: 认证
+    description: 用户认证相关接口
+  - name: 多智能体聊天
+    description: 多智能体心理咨询聊天接口
+  - name: 会话管理
+    description: 用户会话管理接口
+paths:
+  /:
+    get:
+      tags:
+        - 健康检查
+      summary: API健康检查
+      description: 检查API服务是否正常运行
+      operationId: healthCheck
+      responses:
+        '200':
+          description: API服务正常
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Welcome to the LLM Scaffold API!
+  /api/auth/register:
+    post:
+      tags:
+        - 认证
+      summary: 用户注册
+      description: 创建新用户账号
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '200':
+          description: 用户注册成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 邮箱已存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/login:
+    post:
+      tags:
+        - 认证
+      summary: 用户登录
+      description: 用户登录并获取访问令牌
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: 登录失败，邮箱或密码错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/refresh:
+    post:
+      tags:
+        - 认证
+      summary: 刷新访问令牌
+      description: 使用刷新令牌获取新的访问令牌
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: 令牌刷新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: 无效的刷新令牌
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/validate:
+    post:
+      tags:
+        - 认证
+      summary: 验证令牌
+      description: 验证访问令牌是否有效
+      operationId: validateToken
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 令牌有效
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  user_id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+        '401':
+          description: 无效的令牌
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/logout:
+    post:
+      tags:
+        - 认证
+      summary: 用户登出
+      description: 用户登出并使当前令牌失效
+      operationId: logoutUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 登出成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 登出成功
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/me:
+    get:
+      tags:
+        - 认证
+      summary: 获取当前用户信息
+      description: 获取当前登录用户的详细信息
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取用户信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/multi_agent/chat:
+    post:
+      tags:
+        - 多智能体聊天
+      summary: 多智能体心理咨询聊天
+      description: 发送消息到多智能体心理咨询系统并获取流式响应
+      operationId: multiAgentChat
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiAgentChatRequest'
+      responses:
+        '200':
+          description: 流式响应
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/multi_agent/test:
+    post:
+      tags:
+        - 多智能体聊天
+      summary: 测试多智能体心理咨询
+      description: 测试多智能体心理咨询系统的响应
+      operationId: testMultiAgent
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiAgentTestRequest'
+      responses:
+        '200':
+          description: 测试成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiAgentTestResponse'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/conversations/:
+    get:
+      tags:
+        - 会话管理
+      summary: 获取会话列表
+      description: 获取当前用户的所有会话列表
+      operationId: getConversations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 成功获取会话列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConversationInfo'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/conversations/{conversation_id}:
+    delete:
+      tags:
+        - 会话管理
+      summary: 删除会话
+      description: 删除指定的会话
+      operationId: deleteConversation
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      responses:
+        '200':
+          description: 会话删除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 会话删除成功
+                  conversation_id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 无权限删除此会话
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 会话不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - 会话管理
+      summary: 更新会话标题
+      description: 更新指定会话的标题
+      operationId: updateConversationTitle
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTitleRequest'
+      responses:
+        '200':
+          description: 标题更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 标题更新成功
+                  conversation_id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                  title:
+                    type: string
+                    example: 关于焦虑情绪的咨询
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 无权限修改此会话
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 会话不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/conversations/{conversation_id}/messages:
+    get:
+      tags:
+        - 会话管理
+      summary: 获取会话消息列表
+      description: 获取指定会话的所有消息列表
+      operationId: getConversationMessages
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      responses:
+        '200':
+          description: 成功获取消息列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageInfo'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 无权限访问此会话
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 会话不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/conversations/messages/{message_id}/feedback:
+    patch:
+      tags:
+        - 会话管理
+      summary: 更新消息反馈
+      description: 更新指定消息的反馈评分
+      operationId: updateMessageFeedback
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 消息ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackUpdateRequest'
+      responses:
+        '200':
+          description: 反馈更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 反馈更新成功
+                  message_id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                  feedback:
+                    type: integer
+                    example: 1
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 无权限修改此消息的反馈
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 消息不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    UserRegister:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+        username:
+          type: string
+          example: 张三
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          example: bearer
+        user:
+          $ref: '#/components/schemas/UserInfo'
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    UserInfo:
+      type: object
+      properties:
+        user_id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+        username:
+          type: string
+          example: 张三
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        is_active:
+          type: boolean
+          example: true
+        last_login_at:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        current_emotion:
+          type: string
+          example: happy
+        emotion_updated_at:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+    MultiAgentChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: 我最近感到很焦虑，该怎么办？
+        conversation_id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+    AgentStatusResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          example: agent_status
+        message:
+          type: string
+          example: 启动多智能体协作流程...
+        agents:
+          type: array
+          items:
+            type: string
+          example: [Supervisor, Safety, Retriever, Reranker, Answer]
+        status:
+          type: string
+          example: initializing
+    MultiAgentTestRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: 我最近感到很焦虑，该怎么办？
+    MultiAgentTestResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          example: 理解你的焦虑感受。建议：1. 深呼吸练习；2. 规律作息；3. 适量运动；4. 寻求社交支持；5. 专注当下。若持续困扰，可考虑咨询专业心理医生。
+        intent:
+          type: string
+          example: anxiety_management
+        emotion:
+          type: string
+          example: anxious
+        confidence:
+          type: number
+          format: float
+          example: 0.85
+        crisis_level:
+          type: string
+          example: low
+        safety_triggered:
+          type: boolean
+          example: false
+        execution_time:
+          type: number
+          format: float
+          example: 2.5
+    ConversationInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        conversation_id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+        title:
+          type: string
+          example: 关于焦虑情绪的咨询
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:30:00Z'
+        message_count:
+          type: integer
+          example: 10
+    UpdateTitleRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          example: 关于焦虑情绪的咨询
+    MessageInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        message_id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+        role:
+          type: string
+          example: user
+          enum: [user, assistant]
+        content:
+          type: string
+          example: 我最近感到很焦虑，该怎么办？
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-01-01T12:00:00Z'
+        token_count:
+          type: integer
+          example: 15
+        model_name:
+          type: string
+          example: gpt-3.5-turbo
+        temperature:
+          type: string
+          example: '0.7'
+        feedback:
+          type: integer
+          example: 1
+          enum: [-1, 0, 1]
+    FeedbackUpdateRequest:
+      type: object
+      required:
+        - feedback
+      properties:
+        feedback:
+          type: integer
+          example: 1
+          enum: [-1, 0, 1]
+          description: 反馈值：-1(不好)，0(默认)，1(很好)
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: 错误详情信息
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

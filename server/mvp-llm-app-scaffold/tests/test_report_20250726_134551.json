@@ -1,0 +1,76 @@
+{
+  "summary": {
+    "total_tests": 11,
+    "passed_tests": 9,
+    "failed_tests": 2,
+    "success_rate": 81.81818181818183
+  },
+  "results": [
+    {
+      "test_name": "用户注册",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:16.156265",
+      "details": "用户ID: 729892da-9c87-47de-8646-30ce3357ec56, 邮箱: comprehensive_test_1753508713@example.com"
+    },
+    {
+      "test_name": "用户登录",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:17.384800",
+      "details": "成功获取访问令牌"
+    },
+    {
+      "test_name": "令牌验证",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:18.393335",
+      "details": "用户信息: 综合测试用户_1753508713, 活跃状态: True"
+    },
+    {
+      "test_name": "获取用户信息",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:19.402353",
+      "details": "用户名: 综合测试用户_1753508713, 邮箱: comprehensive_test_1753508713@example.com"
+    },
+    {
+      "test_name": "创建对话",
+      "success": false,
+      "timestamp": "2025-07-26T13:45:30.472833",
+      "details": "没有收到有效响应，原始数据: ['data: {\"type\": \"status\", \"message\": \"Processing your message...\"}', 'data: {\"type\": \"agent_status\", \"message\": \"多智能体流程失败，切换到备用模式...\", \"status\": \"fallback\", \"error\": \"object of type \\'FileChatMessageHistory\\' has no len()\"}', 'data: {\"type\": \"response\", \"response\": \"你\", \"conversation_id\": \"2c1c0941-cc3d-428f-b8c8-dff7c2eae754\", \"metadata\": {\"multi_agent_mode\": true, \"partial\": true, \"is_chunk\": true, \"char_index\": 0, \"total_chars\": 287}, \"timestamp\": \"2025-07-26T13:45:21.421735\"}']"
+    },
+    {
+      "test_name": "获取对话消息",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:33.523176",
+      "details": "获取到 2 条消息，其中 1 条助手消息"
+    },
+    {
+      "test_name": "消息正面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:34.535114",
+      "details": "消息ID: 400f2425-e705-4edd-ab63-87c0b3ba9c89, 反馈值: 1"
+    },
+    {
+      "test_name": "消息负面反馈",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:35.556161",
+      "details": "消息ID: 400f2425-e705-4edd-ab63-87c0b3ba9c89, 反馈值: -1"
+    },
+    {
+      "test_name": "继续对话",
+      "success": false,
+      "timestamp": "2025-07-26T13:45:46.644575",
+      "details": "没有收到有效响应，原始数据: ['data: {\"type\": \"status\", \"message\": \"Processing your message...\"}', 'data: {\"type\": \"agent_status\", \"message\": \"多智能体流程失败，切换到备用模式...\", \"status\": \"fallback\", \"error\": \"object of type \\'FileChatMessageHistory\\' has no len()\"}', 'data: {\"type\": \"response\", \"response\": \"你\", \"conversation_id\": \"2c1c0941-cc3d-428f-b8c8-dff7c2eae754\", \"metadata\": {\"multi_agent_mode\": true, \"partial\": true, \"is_chunk\": true, \"char_index\": 0, \"total_chars\": 287}, \"timestamp\": \"2025-07-26T13:45:37.552279\"}']"
+    },
+    {
+      "test_name": "令牌刷新",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:49.696659",
+      "details": "成功获取新的访问令牌"
+    },
+    {
+      "test_name": "用户登出",
+      "success": true,
+      "timestamp": "2025-07-26T13:45:50.705176",
+      "details": "消息: Successfully logged out"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python tests:*)",
+      "Bash(python:*)",
+      "Bash(PORT=8001 python start_api.py)",
+      "Bash(pip install:*)",
+      "Bash(PORT=8001 timeout:*)",
+      "Bash(set PORT=8001)",
+      "Bash(timeout:*)",
+      "Bash(taskkill:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(chcp:*)",
+      "Bash(set PYTHONIOENCODING=utf-8)"
+    ],
+    "deny": []
+  }
+}
